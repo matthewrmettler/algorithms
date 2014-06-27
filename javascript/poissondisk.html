@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<canvas id="canvas" width="800" height="600"
+	style="border:1px solid #000000;">
+	Canvas not supported.
+	</canvas>
+
+	<script>
+
+		function drawPoint(point, context)
+		{
+			context.fillStyle = "#000000";
+			context.beginPath();
+			context.arc(point[0], point[1], 2, 0, 2*Math.PI);
+			context.fill();
+			context.closePath();
+		}
+
+		function inBounds(point, width, height)
+		{
+			return (point[0] > 0 && point[0] < width && point[1] > 0 && point[1] < height);
+		}
+
+		function isDistant(a, b, minimum)
+		{
+			var dx = a[0] - b[0];
+			if (dx > minimum) { return false; }
+			var dy = a[1] - b[1];
+			if (dy > minimum) { return false; }
+			var distance =  Math.sqrt(dx*dx + dy*dy);
+			if (distance > minimum) { return false; }
+			return true;
+		}
+
+		function getAnnulusPoint(x, y, radius)
+		{
+			var theta = 2*Math.PI*Math.random();
+			var A = 2 / (3*radius*radius);
+			var r = Math.sqrt((2*Math.random()/A) + radius*radius);
+			var point = [Math.floor(x + (r * Math.cos(theta))), Math.floor(y + (r * Math.sin(theta)))];
+			return point;
+		}
+
+		function fastPoisson(width, height, minDistance, sampleLimit, context)
+		{
+			var points = new Array();
+			console.log("fastPoisson, min distance " + minDistance);
+			var activeList = new Array();
+
+			//First point
+			var x_0 = [Math.floor(Math.random()*width), Math.floor(Math.random()*height)];
+			console.log("x_0 " + x_0);
+
+			points.push(x_0);
+			activeList.push(x_0);
+			drawPoint(x_0, context);
+			var random_index = 0;
+			var point = [-1, -1];
+			var genPoint = [-1, -1];
+			var valid = false;
+			var trials = 0;
+			while (activeList.length > 0 && activeList.length < 1000)
+			{
+				random_index = Math.floor(Math.random() * activeList.length);
+				point = activeList[random_index];
+				for (var i = 0; i < sampleLimit; i++)
+				{
+					genPoint = getAnnulusPoint(point[0], point[1], minDistance);
+					valid = true;
+					if (inBounds(genPoint, width, height) === true) 
+					{
+						for (var j = 0; j < points.length; j++)
+						{
+							if (isDistant(points[j], genPoint, minDistance) === true) 
+							{ valid = false; break; }
+						}
+						if (valid === true) { break; }
+					} else {
+						valid = false;
+					}
+				}
+
+				if (valid === false) { 
+					activeList.splice(random_index, 1);
+				} else { 
+					activeList.push(genPoint); 
+					points.push(genPoint);
+					drawPoint(genPoint, context);
+				}
+				trials++;
+			}
+			return points;
+		}
+
+		function main()
+		{
+			console.log("main");
+			var c = document.getElementById("canvas");
+			var context = c.getContext("2d");
+			context.fillStyle = "#EEEEEE";
+			context.fillRect(0, 0, c.width, c.height);
+			points = fastPoisson(c.width, c.height, 15, 200, context);
+			console.log("Poisson done, point count = " + points.length);
+		}
+
+
+		main();
+	</script>
+	<p><center>A non-efficient implementation of <a href="https://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph07-poissondisk.pdf">Bridson's algorithm for Poisson-disc sampling</a> ; I did not implement the grid for storing samples.</center></p>
+</body>
+</html>
