@@ -35,6 +35,7 @@ def insertion_sort(array):
 			array[j] = array[j-1]
 			j = j-1
 		array[j] = x
+	return array
 
 '''
 Bubble sort, sometimes referred to as sinking sort, is a simple sorting 
@@ -58,9 +59,43 @@ def bubble_sort(array):
 				array[i] = temp
 				new_n = i
 		n = new_n
+	return array
 
+'''
+Quicksort is a divide and conquer algorithm. Quicksort first divides a large 
+array into two smaller sub-array: the low elements and the high elements. 
+Quicksort can then recursively sort the sub-arrays.
 
-test_list = [x for x in range(50, 10, -2)]
-print(test_list)
-bubble_sort(test_list)
-print(test_list)
+The steps are:
+
+-Pick an element, called a pivot, from the array.
+-Reorder the array so that all elements with values less than the pivot come 
+before the pivot, while all elements with values greater than the pivot come 
+after it (equal values can go either way). After this partitioning, the pivot 
+is in its final position. This is called the partition operation.
+-Recursively apply the above steps to the sub-array of elements with smaller 
+values and separately to the sub-array of elements with greater values.
+
+Worst-case performance: O(n^2)
+Best case performance: O(n)
+Average case performance: O(n log n)
+Worst case space complexity: O(n) auxiliary
+'''
+def quicksort(array):
+	if array == [] or len(array) <= 1:
+		return array
+	else:
+		pivot = array[0]
+		lesser = quicksort([x for x in array[1:] if x < pivot])
+		greater = quicksort([x for x in array[1:] if x >= pivot])
+		return lesser + [pivot] + greater
+
+def test_sorts(array):
+	print("Original array: " + str(array))
+	print("Bubble sort: " + str(bubble_sort(list(array))))
+	print("Insertion sort: " + str(insertion_sort(list(array))))
+	print("Quicksort: " + str(quicksort(list(array))))
+
+if __name__ == "__main__":
+	test_list = [x for x in range(50, 10, -2)]
+	test_sorts(test_list)
