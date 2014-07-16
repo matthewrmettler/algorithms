@@ -2,7 +2,7 @@
 A collection of sorting algorithms implemented in python.
 Written by Matthew Mettler.
 '''
-
+from random import randint
 '''
 Insertion sort
 Insertion sort is a simple sorting algorithm that builds the final sorted array
@@ -37,6 +37,26 @@ def insertion_sort(array):
 		array[j] = x
 	return array
 
+'''
+Selection sort is a sorting algorithm, specifically an in-place comparison 
+sort.
+
+The algorithm divides the input list into two parts: the sublist of items 
+already sorted, which is built up from left to right at the front (left) of 
+the list, and the sublist of items remaining to be sorted that occupy the rest 
+of the list. Initially, the sorted sublist is empty and the unsorted sublist 
+is the entire input list. The algorithm proceeds by finding the smallest 
+(or largest, depending on sorting order) element in the unsorted sublist, 
+exchanging it with the leftmost unsorted element (putting it in sorted order), 
+and moving the sublist boundaries one element to the right.
+'''
+def selection_sort(array):
+	for i in range(len(array)):
+		min_i = min(array[i:])
+		min_index = array[i:].index(min_i)
+		array[i + min_index] = array[i]
+		array[i] = min_i
+	return array
 '''
 Bubble sort, sometimes referred to as sinking sort, is a simple sorting 
 algorithm that works by repeatedly stepping through the list to be sorted, 
@@ -92,10 +112,18 @@ def quicksort(array):
 
 def test_sorts(array):
 	print("Original array: " + str(array))
-	print("Bubble sort: " + str(bubble_sort(list(array))))
+	print("")
 	print("Insertion sort: " + str(insertion_sort(list(array))))
+	print("Selection sort: " + str(quicksort(list(array))))
+	print("")
 	print("Quicksort: " + str(quicksort(list(array))))
+	print("Bubble sort: " + str(bubble_sort(list(array))))
 
+def random_array(size):
+	array = []
+	for i in range(size):
+		array.append(randint(0,100))
+	return array
 if __name__ == "__main__":
-	test_list = [x for x in range(50, 10, -2)]
+	test_list = random_array(20)
 	test_sorts(test_list)
