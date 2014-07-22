@@ -2,7 +2,7 @@
 A collection of sorting algorithms implemented in python.
 Written by Matthew Mettler.
 '''
-from random import randint
+from random import randint, shuffle
 '''
 Insertion sort
 Insertion sort is a simple sorting algorithm that builds the final sorted array
@@ -110,20 +110,59 @@ def quicksort(array):
 		greater = quicksort([x for x in array[1:] if x >= pivot])
 		return lesser + [pivot] + greater
 
+
+
+'''
+In computer science, bogosort(also stupid sort, slowsort, random sort, shotgun 
+sort or monkey sort) is a particularly ineffective sorting algorithm based 
+on the generate and test paradigm. It is not useful for sorting, but may be 
+used for educational purposes, to contrast it with other more realistic 
+algorithms; it has also been used as an example in logic programming. 
+
+If bogosort were used to sort a deck of cards, it would consist of checking if
+the deck were in order, and if it were not, throwing the deck into the air, 
+picking the cards up at random, and repeating the process until the deck is 
+sorted. Its name comes from the word bogus.
+ '''
+def bogosort(array):
+ 	while not isSorted(array):
+ 		shuffle(array)
+	return array
+
+'''
+Test out all the sorting algorithms to make sure they're correct.
+'''
 def test_sorts(array):
 	print("Original array: " + str(array))
 	print("")
-	print("Insertion sort: " + str(insertion_sort(list(array))))
-	print("Selection sort: " + str(quicksort(list(array))))
+	print("Exchange sorts:")
+	print("   Bogosort: " + str(isSorted(bogosort(list(array)))))
+	print("   Bubble sort: " + str(isSorted(bubble_sort(list(array)))))
+	print("   Quicksort: " + str(isSorted(quicksort(list(array)))))
 	print("")
-	print("Quicksort: " + str(quicksort(list(array))))
-	print("Bubble sort: " + str(bubble_sort(list(array))))
+	print("Insertion sorts:")
+	print("   Insertion sort: " + str(isSorted(insertion_sort(list(array)))))
+	print("")
+	print("Selection sorts:")
+	print("   Selection sort: " + str(isSorted(quicksort(list(array)))))
 
+
+'''
+Checks if the array is sorted.
+'''
+def isSorted(array):
+	return all(array[i] <= array[i+1] for i in xrange(len(array)-1))
+
+'''
+Generates a random array of size 'size' for testing.
+'''
 def random_array(size):
 	array = []
 	for i in range(size):
 		array.append(randint(0,100))
 	return array
+
+
 if __name__ == "__main__":
-	test_list = random_array(20)
+	test_list = random_array(5)
 	test_sorts(test_list)
