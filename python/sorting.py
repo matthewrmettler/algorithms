@@ -57,6 +57,7 @@ def selection_sort(array):
 		array[i + min_index] = array[i]
 		array[i] = min_i
 	return array
+
 '''
 Bubble sort, sometimes referred to as sinking sort, is a simple sorting 
 algorithm that works by repeatedly stepping through the list to be sorted, 
@@ -79,6 +80,33 @@ def bubble_sort(array):
 				array[i] = temp
 				new_n = i
 		n = new_n
+	return array
+
+'''
+Gnome sort (Stupid sort), originally proposed by Dr. Hamid Sarbazi-Azad 
+(Professor of Computer Engineering at Sharif University of Technology) 
+in 2000 and called Stupid sort (not to be confused with Bogosort), and 
+then later on described by Dick Grune and named "Gnome sort",[1] is a sorting 
+algorithm which is similar to insertion sort, except that moving an element 
+to its proper place is accomplished by a series of swaps, as in bubble sort. 
+It is conceptually simple, requiring no nested loops. 
+
+Worst-case performance: O(n^2)
+Best case performance: O(n)
+Average case performance: O(n^2)
+Worst case space complexity: O(1) auxiliary
+'''
+def gnome_sort(array):
+	position = 1
+	while position < len(array):
+		if array[position] >= array[position-1]:
+			position += 1
+		else:
+			temp = array[position]
+			array[position] = array[position-1]
+			array[position-1] = temp
+			if (position) > 1:
+				position -= 1
 	return array
 
 '''
@@ -139,6 +167,7 @@ def test_sorts(array):
 	print("   Bogosort: " + str(isSorted(bogosort(list(array)))))
 	print("   Bubble sort: " + str(isSorted(bubble_sort(list(array)))))
 	print("   Quicksort: " + str(isSorted(quicksort(list(array)))))
+	print("   Gnome Sort: " + str(isSorted(gnome_sort(list(array)))))
 	print("")
 	print("Insertion sorts:")
 	print("   Insertion sort: " + str(isSorted(insertion_sort(list(array)))))
